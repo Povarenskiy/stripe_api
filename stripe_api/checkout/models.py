@@ -6,7 +6,7 @@ class Item(models.Model):
     USD = "USD"
     RUB = "RUB"
 
-    STATUS_CHOICES = [
+    CURRENCY_CHOICES = [
         (USD, "usd"),
         (RUB, "rub"),
     ]
@@ -14,7 +14,7 @@ class Item(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     price = models.CharField(max_length=20)
-    currency = models.CharField(verbose_name='currency for payment', max_length=3, choices=STATUS_CHOICES)
+    currency = models.CharField(verbose_name='currency for payment', max_length=3, choices=CURRENCY_CHOICES)
 
     objects = models.Manager()
 

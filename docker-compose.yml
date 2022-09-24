@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  web:
+    container_name: stripe_api
+    build: .
+    restart: on-failure
+    ports:
+      - "8000:8000"
