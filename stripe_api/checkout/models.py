@@ -1,51 +1,57 @@
 from django.db import models
+from django.urls import reverse
 
 
-# Модель Item, включает основные характеристики товара
 class Item(models.Model):
-    USD = "USD"
-    RUB = "RUB"
+    """Модель товара"""
+    name = models.CharField(max_length=50)
+    price = models.CharField(max_length=20)
+    description = models.CharField(max_length=100)
 
     CURRENCY_CHOICES = [
-        (USD, "usd"),
-        (RUB, "rub"),
+        ("USD", "usd"),
+        ("RUB", "rub"),
     ]
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
 
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=100)
-    price = models.CharField(max_length=20)
-    currency = models.CharField(verbose_name='currency for payment', max_length=3, choices=CURRENCY_CHOICES)
+    def get_checkout_url(self):
+        return reverse('buy', kwargs={'pk': self.id})
 
-    objects = models.Manager()
-
-
-# Модель Order, включает список товаров для покупки
-class Order(models.Model):
-    name = models.CharField(max_length=50)
-    items = models.ManyToManyField(Item, verbose_name='Items in order')
-
-    objects = models.Manager()
+    def get_price(self):
+        return int(self.price) / 100
+    
 
 
-# Модель Discount, включает размер скидки и order к которому прикрепляется
 class Discount(models.Model):
+    """Модель скидки к заказу"""
     percent_off = models.FloatField()
-    order = models.OneToOneField(Order, on_delete=models.CASCADE, primary_key=True,
-                                 verbose_name='Order id for discount')
 
-    objects = models.Manager()
+    def get_attributes(self):
+        return dict(percent_off = self.percent_off)
+    
 
-
-# Модель Discount, включает основные характеристики налога и order к которому прикрепляется
 class Tax(models.Model):
+    """Модель налогов к заказу"""
     display_name = models.CharField(max_length=50)
     inclusive = models.BooleanField()
     percentage = models.FloatField()
-    order = models.OneToOneField(Order, on_delete=models.CASCADE, primary_key=True,
-                                 verbose_name='Order id for tax')
+   
+    def get_attributes(self):
+        return dict(
+            display_name = self.percentage,
+            inclusive = self.inclusive,
+            percentage = self.percentage,
+        )
 
-    objects = models.Manager()
 
+class Order(models.Model):
+    """Модель заказа"""
+    items = models.ManyToManyField(Item)
+    discount = models.ForeignKey(Discount, on_delete=models.DO_NOTHING, null=True)
+    tax = models.ForeignKey(Tax, on_delete=models.DO_NOTHING, null=True)
+
+    def get_checkout_url(self):
+        return reverse('buy_order', kwargs={'pk': self.id})
 
 
 

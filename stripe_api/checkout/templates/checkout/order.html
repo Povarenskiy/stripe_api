@@ -1,0 +1,12 @@
+{% extends 'checkout/base.html' %}
+   
+{% block content %}
+  <h1>Заказ</h1>
+  <p>{{ object.description }}</p>
+  {% for item in object.items.all %}
+    <hr>
+    <h3>{{ item.name }}</h3>
+    <p>{{ item.description }}</p>
+    <p>{{ item.get_price }} {{ item.currency }}</p>
+    {% endfor %}
+{% endblock %}
