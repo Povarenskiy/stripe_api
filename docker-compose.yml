@@ -1,8 +1,13 @@
-version: '3.8'
+version: '3.9'
 services:
   web:
+    environment:
+      - STRIPE_SECRET_KEY=
+      - STRIPE_PUBLIC_KEY=
+    restart: always
     container_name: stripe_api
     build: .
-    restart: on-failure
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 stripe_api.wsgi"
     ports:
       - "8000:8000"
+ 

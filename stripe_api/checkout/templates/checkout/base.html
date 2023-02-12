@@ -13,8 +13,8 @@
     
     <div class="container w-50 border shadow p-4">
         <div class="col-6">
-        {% block content %}
-        {% endblock %}
+            {% block content %}
+            {% endblock %}
             <button class='btn btn-primary w-100' id="buy-button" onclick="goStripe('{{ object.get_checkout_url }}', '{{ view.stripe_public_key }}')">Купить</button>
         </div>
     </div>
