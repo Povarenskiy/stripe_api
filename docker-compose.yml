@@ -1,13 +1,9 @@
 version: '3.9'
 services:
   web:
-    environment:
-      - STRIPE_SECRET_KEY=
-      - STRIPE_PUBLIC_KEY=
     restart: always
-    container_name: stripe_api
+    container_name: povarenskiy_stripe_api
     build: .
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 stripe_api.wsgi"
     ports:
       - "8000:8000"
  

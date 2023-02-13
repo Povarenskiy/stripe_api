@@ -38,7 +38,7 @@ class Tax(models.Model):
    
     def get_attributes(self):
         return dict(
-            display_name = self.percentage,
+            display_name = self.display_name,
             inclusive = self.inclusive,
             percentage = self.percentage,
         )
